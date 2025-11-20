@@ -32,6 +32,9 @@ export default function Portfolio() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle")
 
   useEffect(() => {
     setIsVisible(true)
@@ -71,6 +74,67 @@ export default function Portfolio() {
     const element = document.getElementById(sectionId)
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })
+    }
+  }
+
+  const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    setSubmitStatus("idle")
+
+    try {
+      const webhookUrl = "https://discord.com/api/webhooks/1441152099101708329/KmEc3ROLJUEHZPg8RMBweGHo0iSGFWVVGk25tSDDoRzQx0vB6QzbEQavLXrBnM4B7BXE"
+      
+      const embed = {
+        title: "New Portfolio Message! 🎉",
+        description: formData.message,
+        color: 16750848, // Orange color (#ff8c00)
+        fields: [
+          {
+            name: "Name",
+            value: formData.name,
+            inline: true,
+          },
+          {
+            name: "Email",
+            value: formData.email,
+            inline: true,
+          },
+          {
+            name: "Timestamp",
+            value: new Date().toLocaleString(),
+            inline: false,
+          },
+        ],
+        footer: {
+          text: "Portfolio Contact Form",
+        },
+      }
+
+      const response = await fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          embeds: [embed],
+        }),
+      })
+
+      if (response.ok) {
+        setSubmitStatus("success")
+        setFormData({ name: "", email: "", message: "" })
+        setTimeout(() => setSubmitStatus("idle"), 5000) // Clear message after 5 seconds
+      } else {
+        setSubmitStatus("error")
+        setTimeout(() => setSubmitStatus("idle"), 5000)
+      }
+    } catch (error) {
+      console.error("Error sending message:", error)
+      setSubmitStatus("error")
+      setTimeout(() => setSubmitStatus("idle"), 5000)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -387,7 +451,7 @@ export default function Portfolio() {
                 </p>
                 <p>
                   Skilled in <span className="text-emerald-300 font-semibold">C++, Java, Python and the MERN stack</span>, with a strong interest in
-                  <span className="text-amber-300 font-semibold"> Cryptography</span> and secure systems — including research in
+                  <span className="text-amber-300 font-semibold"> Cryptography</span> and secure systems including research in
                   <span className="text-amber-300 font-semibold"> Homomorphic Encryption</span>.
                 </p>
               </div>
@@ -590,7 +654,7 @@ export default function Portfolio() {
                 </div>
                 <div className="flex items-center text-gray-400 text-xs">
                   <Calendar className="w-4 h-4 mr-2" />
-                  May 2025 – Ongoing
+                  September 2025
                 </div>
               </CardContent>
             </Card>
@@ -741,39 +805,41 @@ export default function Portfolio() {
       {/* Experience Section */}
       <section id="experience" className="py-20 px-4 sm:px-6 lg:px-8 relative">
         <div className="max-w-4xl mx-auto relative z-10">
-          <h2 className="text-5xl font-bold text-center mb-20 bg-gradient-to-r from-blue-400 to-amber-400 bg-clip-text text-transparent">
-            Professional Experience
-          </h2>
-          <Card className="border border-blue-400/30 bg-slate-900/40 backdrop-blur-xl hover:bg-slate-900/60 hover:border-blue-400/60 transition-all duration-500 transform hover:-translate-y-4 overflow-hidden shadow-lg shadow-blue-500/20">
-            <div className="h-2 bg-gradient-to-r from-blue-400 to-amber-400"></div>
+          <div className="text-center mb-20">
+            <h2 className="text-5xl font-bold inline-block text-white">
+              Professional <span className="text-orange-500">Experience</span>
+            </h2>
+          </div>
+          <Card className="border border-orange-500/40 bg-slate-900/40 backdrop-blur-xl hover:bg-slate-900/60 hover:border-orange-400/70 transition-all duration-500 transform hover:-translate-y-4 overflow-hidden shadow-lg shadow-orange-500/30">
+            <div className="h-1 bg-gradient-to-r from-orange-600 via-orange-500 to-orange-400 shadow-md shadow-orange-600/40"></div>
             <CardHeader className="bg-slate-900/30">
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-3xl text-white mb-3 font-bold">Software Engineer Intern</CardTitle>
                   <CardDescription className="text-xl text-gray-300 font-semibold">TechCiti Technologies Private Limited</CardDescription>
                 </div>
-                <div className="bg-gradient-to-r from-blue-500 to-amber-500 p-5 rounded-lg">
-                  <Briefcase className="w-10 h-10 text-white" />
+                <div className="bg-orange-600/15 border border-orange-500/40 p-5 rounded-lg hover:bg-orange-600/25 transition-colors">
+                  <Briefcase className="w-10 h-10 text-orange-400" />
                 </div>
               </div>
             </CardHeader>
             <CardContent className="p-8">
               <div className="flex items-center text-gray-400 mb-8">
                 <Calendar className="w-5 h-5 mr-3" />
-                <span className="bg-blue-500/20 text-blue-300 px-4 py-2 rounded-lg font-bold border border-blue-500/50">
+                <span className="bg-orange-600/20 text-orange-300 px-4 py-2 rounded-lg font-bold border border-orange-500/50">
                   Nov 2024 – Jan 2025
                 </span>
               </div>
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-4">
                   <div className="flex items-start">
-                    <div className="w-3 h-3 bg-blue-400 rounded-full mt-2 mr-4 flex-shrink-0"></div>
+                    <div className="w-3 h-3 bg-orange-500 rounded-full mt-2 mr-4 flex-shrink-0"></div>
                     <p className="text-gray-300 text-lg">
                       Developed and maintained Bug Triage using modern technologies
                     </p>
                   </div>
                   <div className="flex items-start">
-                    <div className="w-3 h-3 bg-indigo-400 rounded-full mt-2 mr-4 flex-shrink-0"></div>
+                    <div className="w-3 h-3 bg-orange-400 rounded-full mt-2 mr-4 flex-shrink-0"></div>
                     <p className="text-gray-300 text-lg">
                       Collaborated with cross-functional teams to deliver high-quality solutions
                     </p>
@@ -781,13 +847,13 @@ export default function Portfolio() {
                 </div>
                 <div className="space-y-4">
                   <div className="flex items-start">
-                    <div className="w-3 h-3 bg-amber-400 rounded-full mt-2 mr-4 flex-shrink-0"></div>
+                    <div className="w-3 h-3 bg-orange-600 rounded-full mt-2 mr-4 flex-shrink-0"></div>
                     <p className="text-gray-300 text-lg">
                       Implemented J46 Decision Tree for prioritizing work in application development
                     </p>
                   </div>
                   <div className="flex items-start">
-                    <div className="w-3 h-3 bg-orange-400 rounded-full mt-2 mr-4 flex-shrink-0"></div>
+                    <div className="w-3 h-3 bg-orange-500 rounded-full mt-2 mr-4 flex-shrink-0"></div>
                     <p className="text-gray-300 text-lg">
                       Participated in code reviews and contributed to technical documentation
                     </p>
@@ -803,102 +869,100 @@ export default function Portfolio() {
       <section className="py-20 px-4 sm:px-6 lg:px-8 relative">
         <div className="absolute inset-0 bg-black/20"></div>
         <div className="max-w-6xl mx-auto relative z-10">
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Education */}
-            <div>
-              <h2 className="text-5xl font-bold mb-12 inline-block text-white">
-                My <span className="text-orange-500">Education</span>
-              </h2>
-              <div className="space-y-8">
-                <Card className="border border-orange-500/40 bg-slate-900/40 backdrop-blur-xl hover:bg-slate-900/60 hover:border-orange-400/70 transition-all duration-300 shadow-lg shadow-orange-500/30">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="text-2xl text-white font-bold">Master of Computer Applications</CardTitle>
-                        <CardDescription className="text-gray-300 font-semibold text-lg">
-                          RV Institute of Technology & Management
-                        </CardDescription>
-                      </div>
-                      <GraduationCap className="w-10 h-10 text-orange-400" />
+          {/* Education Section */}
+          <div>
+            <h2 className="text-4xl font-bold mb-8 inline-block text-white">
+              My <span className="text-orange-500">Education</span>
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6 mb-16">
+              <Card className="border border-orange-500/40 bg-slate-900/40 backdrop-blur-xl hover:bg-slate-900/60 hover:border-orange-400/70 transition-all duration-300 shadow-lg shadow-orange-500/30">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <CardTitle className="text-lg text-white font-bold">Master of Computer Applications</CardTitle>
+                      <CardDescription className="text-gray-300 font-semibold text-sm">
+                        RV Institute of Technology & Management
+                      </CardDescription>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-300 font-bold text-lg">CGPA: 8.67</span>
-                      <Badge className="bg-orange-600/30 text-orange-300 border-orange-500/60 font-bold">Current</Badge>
-                    </div>
-                  </CardContent>
-                </Card>
+                    <GraduationCap className="w-8 h-8 text-orange-400 flex-shrink-0" />
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-300 font-bold">CGPA: 8.67</span>
+                    <Badge className="bg-orange-600/30 text-orange-300 border-orange-500/60 font-bold text-xs">Current</Badge>
+                  </div>
+                </CardContent>
+              </Card>
 
-                <Card className="border border-orange-500/40 bg-slate-900/40 backdrop-blur-xl hover:bg-slate-900/60 hover:border-orange-400/70 transition-all duration-300 shadow-lg shadow-orange-500/30">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="text-2xl text-white font-bold">
-                          Bachelor of Computer Applications
-                        </CardTitle>
-                        <CardDescription className="text-gray-300 font-semibold text-lg">
-                          ASC Degree College
-                        </CardDescription>
-                      </div>
-                      <GraduationCap className="w-10 h-10 text-orange-400" />
+              <Card className="border border-orange-500/40 bg-slate-900/40 backdrop-blur-xl hover:bg-slate-900/60 hover:border-orange-400/70 transition-all duration-300 shadow-lg shadow-orange-500/30">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <CardTitle className="text-lg text-white font-bold">
+                        Bachelor of Computer Applications
+                      </CardTitle>
+                      <CardDescription className="text-gray-300 font-semibold text-sm">
+                        ASC Degree College
+                      </CardDescription>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-300 font-bold text-lg">CGPA: 8.85</span>
-                      <Badge className="bg-orange-600/30 text-orange-300 border-orange-500/60 font-bold">
-                        Completed
-                      </Badge>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+                    <GraduationCap className="w-8 h-8 text-orange-400 flex-shrink-0" />
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-2">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-300 font-bold">CGPA: 8.85</span>
+                    <Badge className="bg-orange-600/30 text-orange-300 border-orange-500/60 font-bold text-xs">
+                      Completed
+                    </Badge>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
+          </div>
 
-            {/* Achievements */}
-            <div>
-              <h2 className="text-5xl font-bold mb-12 inline-block text-white">
-                Research & <span className="text-orange-500">Achievements</span>
-              </h2>
-              <div className="space-y-8">
-                <Card className="border border-orange-500/40 bg-slate-900/40 backdrop-blur-xl hover:bg-slate-900/60 hover:border-orange-400/70 transition-all duration-300 shadow-lg shadow-orange-500/30">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="text-2xl text-white font-bold">IEEE Published Paper</CardTitle>
-                        <CardDescription className="text-gray-300 font-semibold text-lg">
-                          Secure Folder Encryption using Homomorphic Encryption
-                        </CardDescription>
-                      </div>
-                      <Award className="w-10 h-10 text-orange-400" />
+          {/* Research & Achievements Section */}
+          <div>
+            <h2 className="text-4xl font-bold mb-8 inline-block text-white">
+              Research & <span className="text-orange-500">Achievements</span>
+            </h2>
+            <div className="grid md:grid-cols-2 gap-6">
+              <Card className="border border-orange-500/40 bg-slate-900/40 backdrop-blur-xl hover:bg-slate-900/60 hover:border-orange-400/70 transition-all duration-300 shadow-lg shadow-orange-500/30">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <CardTitle className="text-lg text-white font-bold">IEEE Published Paper</CardTitle>
+                      <CardDescription className="text-gray-300 font-semibold text-sm">
+                        Secure Folder Encryption using Homomorphic Encryption
+                      </CardDescription>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-300 text-lg">
-                      Research paper focusing on advanced encryption techniques for secure data storage and
-                      communication.
-                    </p>
-                  </CardContent>
-                </Card>
+                    <Award className="w-8 h-8 text-orange-400 flex-shrink-0" />
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-2">
+                  <p className="text-gray-300 text-sm">
+                    Research paper focusing on advanced encryption techniques for secure data storage and
+                    communication.
+                  </p>
+                </CardContent>
+              </Card>
 
-                <Card className="border border-orange-500/40 bg-slate-900/40 backdrop-blur-xl hover:bg-slate-900/60 hover:border-orange-400/70 transition-all duration-300 shadow-lg shadow-orange-500/30">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <CardTitle className="text-2xl text-white font-bold">Smart India Hackathon 2024</CardTitle>
-                        <CardDescription className="text-gray-300 font-semibold text-lg">Finalist</CardDescription>
-                      </div>
-                      <Award className="w-10 h-10 text-orange-400" />
+              <Card className="border border-orange-500/40 bg-slate-900/40 backdrop-blur-xl hover:bg-slate-900/60 hover:border-orange-400/70 transition-all duration-300 shadow-lg shadow-orange-500/30">
+                <CardHeader className="pb-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <CardTitle className="text-lg text-white font-bold">Smart India Hackathon 2024</CardTitle>
+                      <CardDescription className="text-gray-300 font-semibold text-sm">Finalist</CardDescription>
                     </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-300 text-lg">
-                      Reached the finals of India's biggest hackathon, demonstrating innovative problem-solving skills.
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
+                    <Award className="w-8 h-8 text-orange-400 flex-shrink-0" />
+                  </div>
+                </CardHeader>
+                <CardContent className="pt-2">
+                  <p className="text-gray-300 text-sm">
+                    Reached the finals of India's biggest hackathon, demonstrating innovative problem-solving skills.
+                  </p>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
@@ -910,7 +974,7 @@ export default function Portfolio() {
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center mb-20">
             <h2 className="text-5xl font-bold inline-block text-white">
-              Let's Connect & Create Something <span className="text-orange-500">Amazing</span>
+              Let's <span className="text-orange-500">Connect</span> & Create Something <span className="text-orange-500">Amazing</span>
             </h2>
           </div>
           <div className="grid md:grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
@@ -957,10 +1021,13 @@ export default function Portfolio() {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form className="space-y-6 md:space-y-8">
+                <form onSubmit={handleFormSubmit} className="space-y-6 md:space-y-8">
                   <div>
                     <Input
                       placeholder="Your Name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      required
                       className="bg-slate-800/50 border border-orange-500/50 text-white placeholder:text-gray-400 focus:border-orange-400 transition-all duration-300 text-base md:text-lg py-3 md:py-4"
                     />
                   </div>
@@ -968,19 +1035,42 @@ export default function Portfolio() {
                     <Input
                       type="email"
                       placeholder="Your Email"
+                      value={formData.email}
+                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      required
                       className="bg-slate-800/50 border border-orange-500/50 text-white placeholder:text-gray-400 focus:border-orange-400 transition-all duration-300 text-base md:text-lg py-3 md:py-4"
                     />
                   </div>
                   <div>
                     <Textarea
                       placeholder="Your Message"
+                      value={formData.message}
+                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      required
                       rows={4}
                       className="bg-slate-800/50 border border-orange-500/50 text-white placeholder:text-gray-400 focus:border-orange-400 transition-all duration-300 text-base md:text-lg"
                     />
                   </div>
-                  <Button className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white py-3 md:py-4 rounded-lg font-bold text-base md:text-lg transform hover:scale-105 transition-all duration-300">
-                    <Send className="w-5 md:w-6 h-5 md:h-6 mr-2 md:mr-3" />
-                    Send Message
+                  
+                  {submitStatus === "success" && (
+                    <div className="p-4 bg-green-500/20 border border-green-500/50 rounded-lg text-green-300 text-center font-semibold">
+                      ✅ Message sent successfully! I'll get back to you soon.
+                    </div>
+                  )}
+                  
+                  {submitStatus === "error" && (
+                    <div className="p-4 bg-red-500/20 border border-red-500/50 rounded-lg text-red-300 text-center font-semibold">
+                      ❌ Error sending message. Please try again.
+                    </div>
+                  )}
+                  
+                  <Button 
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full bg-gradient-to-r from-orange-600 to-orange-500 hover:from-orange-500 hover:to-orange-400 text-white py-3 md:py-4 rounded-lg font-bold text-base md:text-lg transform hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Send className={`w-5 md:w-6 h-5 md:h-6 mr-2 md:mr-3 ${isSubmitting ? "animate-spin" : ""}`} />
+                    {isSubmitting ? "Sending..." : "Send Message"}
                   </Button>
                 </form>
               </CardContent>
