@@ -32,30 +32,30 @@
   }
 
   .dark {
-    --background: 20 25% 5%;
+    --background: 240 25% 5%;
     --foreground: 0 0% 98%;
-    --card: 20 20% 10%;
+    --card: 240 20% 10%;
     --card-foreground: 0 0% 98%;
-    --popover: 20 20% 10%;
+    --popover: 240 20% 10%;
     --popover-foreground: 0 0% 98%;
-    --primary: 25 100% 50%;
+    --primary: 226 100% 50%;
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 15%;
-    --secondary-foreground: 25 100% 50%;
-    --muted: 20 15% 25%;
+    --secondary-foreground: 226 100% 50%;
+    --muted: 240 15% 25%;
     --muted-foreground: 0 0% 65%;
-    --accent: 25 100% 50%;
+    --accent: 226 100% 50%;
     --accent-foreground: 0 0% 10%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 20 15% 18%;
-    --input: 20 15% 18%;
-    --ring: 25 100% 50%;
-    --chart-1: 25 100% 50%;
+    --border: 240 15% 18%;
+    --input: 240 15% 18%;
+    --ring: 226 100% 50%;
+    --chart-1: 226 100% 50%;
     --chart-2: 0 0% 20%;
-    --chart-3: 20 30% 35%;
-    --chart-4: 25 95% 55%;
-    --chart-5: 10 80% 45%;
+    --chart-3: 240 30% 35%;
+    --chart-4: 226 95% 55%;
+    --chart-5: 270 80% 45%;
   }
 }
 
@@ -195,14 +195,14 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #ff8c00, #ff6b1a);
+  background: linear-gradient(to bottom, #6366f1, #4f46e5);
   border-radius: 6px;
-  box-shadow: 0 0 6px rgba(255, 140, 0, 0.3);
+  box-shadow: 0 0 6px rgba(99, 102, 241, 0.3);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #ffaa33, #ff8844);
-  box-shadow: 0 0 8px rgba(255, 140, 0, 0.5);
+  background: linear-gradient(to bottom, #818cf8, #6366f1);
+  box-shadow: 0 0 8px rgba(99, 102, 241, 0.5);
 }
 
 /* Selection colors */
